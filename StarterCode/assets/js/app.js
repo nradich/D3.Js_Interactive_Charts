@@ -28,6 +28,112 @@ var svg = d3
 var chartGroup = svg.append('g')
                 .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+//working to institute the multiple axis labels
+var chosenXaxis = "age";
+var chosenYaxis = "smokes";
+
+//function for updating xscale upon click
+function xscale(plotdata, chosenXaxis){
+    //create scales
+    var xLinearScale = d3.scaleLinear()
+        .domain([d3.min(plotdata, d => d[chosenXaxis]) *0.8,
+        d3.max(plotdata ,d =>d[chosenXaxis * 1.2])
+        ])
+        .range([0,width]);
+        return xLinearScale;
+}
+
+//function for updating yscale upon click
+function yscale(plotdata, chosenYaxis){
+        //create scales
+        var yLinearScale = d3.scaleLinear()
+        .domain([d3.min(plotdata, d => d[chosenYaxis]) *0.8,
+        d3.max(plotdata ,d =>d[chosenYaxis * 1.2])
+        ])
+        .range([height, 0]);
+        return yLinearScale;
+}
+
+//function for updating xAxis 
+function renderxAxes(newXscale, xAxis){
+    var bottomAxis = d3.bottomAxis(newXscale);
+
+    xAxis.transition()
+    .duration(1000)
+    .call(bottomAxis)
+
+    return xAxis;
+}
+
+function renderyAxes (newYscale, yAxis){
+    var leftAxis = d3.axisLeft(newYscale);
+
+    yAxis.transtion()
+    duration(1000)
+    .call(leftAxis)
+
+    return yAxis;
+}
+
+function renderCircles(circleGroup, newXscale, newYscale, chosenXaxis, chosenYaxis){
+    
+    cicrcleGroup.transition()
+    .duration(1000)
+    .attr('cx', d=> newXscale(d[chosenXaxis]))
+    .attr('cy', d => newYscale(d[chosenYaxis]));
+
+    return circlesGroup;
+
+}
+
+function updateToolTip (chosenXaxis, chosenYaxis, circleGroup) {
+
+    if (chosenXaxis == "age"){
+        var xlabel = "Age :";
+    }
+    else if (chosenXaxis == "poverty"){
+        var xlabel = "Poverty :";
+    }
+    else {
+        var xlabel = "Income :";
+    };
+
+    if(chosenYaxis == "smokes"){
+        var ylabel = "Smokes:";
+    }
+    else if (chosenYaxis == "obese"){
+        var ylabel = "Obese";
+    }
+    else {
+        var ylabel = "healthcare";
+    }
+
+
+    //initialize tooltip
+    var toolTip = d3.tip()
+    .attr("class", "tooltip")
+    .offset([80, -60])
+    .html(function(d) {
+      return (`State:${d.state}<br>${xlabel}${d[chosenXaxis]}<br>${ylabel}${d[chosenYaxis]}`);
+    });
+
+    //creat tooltip in the chart
+    chartGroup.call(toolTip);
+
+
+    //event to display tooltip
+    circleGroup.on("mouseover", function(data) {
+        toolTip.show(data, this);
+      })
+        // on mouseout event
+        .on("mouseout", function(data, index) {
+          toolTip.hide(data);
+        });
+    return circleGroup;
+    }
+
+
+
 //import data
 //moved the csv file into the same folder - had issues initially reading it
 d3.csv("assets/js/data.csv").then(function(plotdata){
@@ -38,9 +144,18 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
   
     //parse data, could add more for more advances graph
     plotdata.forEach(function(data) {
-        data.smokes = +data.smokes
-        data.age = +data.age
+        data.smokes = +data.smokes;
+        data.age = +data.age;
+        data.income = +data.income;
+        data.poverty = data.poverty;
+        data.obesity = +data.obesity;
+        data.healthcare = +data.healthcare;
     });
+
+    //trying to institute the changing axis
+    
+
+
 
     //would need to switch to chosenxaxis when going for moving axis
     var xLinearScale = d3.scaleLinear()
@@ -125,9 +240,10 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
     chartGroup.append('text')
         .attr('transform', `translate(${width/2.5},${height + margin.top +30})`)
         .attr('class', 'axisText')
-        .text('Average Age of Population')
+        .text('Median Age of Population')
 
 
 
 
 });
+
