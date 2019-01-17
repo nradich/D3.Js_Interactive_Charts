@@ -92,7 +92,7 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
     .attr("class", "tooltip")
     .offset([80, -60])
     .html(function(d) {
-      return (`State:${d.state}<br>Age: ${d.age}<br>Smokes: ${d.smokes}`);
+      return (`State:${d.state}<br>Age: ${d.age}<br>Smokes: ${d.smokes} %`);
     });
 
     //creat tooltip in the chart
@@ -123,7 +123,7 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
     chartGroup.append('text')
         .attr('transform', `translate(${width/2.5},${height + margin.top +30})`)
         .attr('class', 'axisText')
-        .text('Average Age of Population')
+        .text('Median Age of Population')
 
 
 
