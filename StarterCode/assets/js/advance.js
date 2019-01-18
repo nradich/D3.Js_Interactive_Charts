@@ -40,6 +40,9 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
         data.age = +data.age
     });
 
+
+
+    
     //would need to switch to chosenxaxis when going for moving axis
     var xLinearScale = d3.scaleLinear()
         .domain([25,d3.max(plotdata, d=> d.age)])
@@ -54,6 +57,27 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
+     //create circles
+    var circleGroup = chartGroup.selectAll('circle')
+    .data(plotdata)
+    .enter()
+    .append('circle')
+    //d[chosenxAxis]
+    .attr('cx', d => xLinearScale(d.age))
+    .attr('cy', d => yLinearScale(d.smokes))
+    .attr('r', '10')
+    .attr('fill', 'pink')
+    .attr('opacity', '.75')
+
+    var bubbletext = chartGroup.selectAll('text')
+    .data(plotdata)
+    .enter()
+    .append('text')
+    .attr('x', d => xLinearScale(d.age))
+    .attr('y', d => yLinearScale(d.smokes))
+    .text((d) => d.abbr)
+    .attr('font-size', '10px');
+
     //apend axis to chart
     var xAxis = chartGroup.append('g')
             .classed("x-axis", true)
@@ -65,26 +89,9 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
 
     //create circles
     //only one circle showing up for some reason
-    var circleGroup = chartGroup.selectAll('circle')
-        .data(plotdata)
-        .enter()
-        .append('circle')
-        //d[chosenxAxis]
-        .attr('cx', d => xLinearScale(d.age))
-        .attr('cy', d => yLinearScale(d.smokes))
-        .attr('r', '10')
-        .attr('fill', 'pink')
-        .attr('opacity', '.75')
+
     
-    //some of the abbreviations aren't showing up, need to align them with bubbles too
-    var bubbletext = chartGroup.selectAll('text')
-                        .data(plotdata)
-                        .enter()
-                        .append('text')
-                        .attr('x', d => xLinearScale(d.age))
-                        .attr('y', d => yLinearScale(d.smokes))
-                        .text((d) => d.abbr)
-                        .attr('font-size', '10px');
+
 
 
     //initialize tooltip
@@ -111,19 +118,19 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
 
 
     //create axis labels
-    //y Axis
-    chartGroup.append('text')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', 0 -margin.left +40)
-        .attr('x',0 -(height/1.35))
-        .attr('dy', '1em')
-        .attr('class', 'axisText')
-        .text('% of Population That Smokes');
+    // //y Axis
+    // chartGroup.append('text')
+    //     .attr('transform', 'rotate(-90)')
+    //     .attr('y', 0 -margin.left +40)
+    //     .attr('x',0 -(height/1.35))
+    //     .attr('dy', '1em')
+    //     .attr('class', 'axisText')
+    //     .text('% of Population That Smokes');
     
-    chartGroup.append('text')
-        .attr('transform', `translate(${width/2.5},${height + margin.top +30})`)
-        .attr('class', 'axisText')
-        .text('Median Age of Population')
+    // chartGroup.append('text')
+    //     .attr('transform', `translate(${width/2.5},${height + margin.top +30})`)
+    //     .attr('class', 'axisText')
+    //     .text('Median Age of Population')
 
 
 
