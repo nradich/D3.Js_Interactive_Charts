@@ -73,8 +73,8 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
     .data(plotdata)
     .enter()
     .append('text')
-    .attr('x', d => xLinearScale(d.age))
-    .attr('y', d => yLinearScale(d.smokes))
+    .attr('x', d => xLinearScale(d.age)-5)
+    .attr('y', d => yLinearScale(d.smokes-.3))
     .text((d) => d.abbr)
     .attr('font-size', '10px');
 
@@ -118,19 +118,19 @@ d3.csv("assets/js/data.csv").then(function(plotdata){
 
 
     //create axis labels
-    // //y Axis
-    // chartGroup.append('text')
-    //     .attr('transform', 'rotate(-90)')
-    //     .attr('y', 0 -margin.left +40)
-    //     .attr('x',0 -(height/1.35))
-    //     .attr('dy', '1em')
-    //     .attr('class', 'axisText')
-    //     .text('% of Population That Smokes');
+    //y Axis
+    chartGroup.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 0 -margin.left +40)
+        .attr('x',0 -(height/1.35))
+        .attr('dy', '1em')
+        .attr('class', 'axisText')
+        .text('% of Population That Smokes');
     
-    // chartGroup.append('text')
-    //     .attr('transform', `translate(${width/2.5},${height + margin.top +30})`)
-    //     .attr('class', 'axisText')
-    //     .text('Median Age of Population')
+    chartGroup.append('text')
+        .attr('transform', `translate(${width/2.5},${height + margin.top +30})`)
+        .attr('class', 'axisText')
+        .text('Median Age of Population')
 
 
 
